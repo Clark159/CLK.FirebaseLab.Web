@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+	<script language="javascript">
+		window.onload = function ShowHello(){
+			
+			// Elements
+			const uploadButton = document.getElementById("uploadButton");
+			const uploadProgress = document.getElementById("uploadProgress");
+			const uploadResult = document.getElementById("uploadResult");
+			
+			const downloadButton = document.getElementById("downloadButton");
+			const downloadTextbox = document.getElementById("downloadTextbox");
+			const downloadResult = document.getElementById("downloadResult");
+			
+			const deleteButton = document.getElementById("deleteButton");
+			const deleteTextbox = document.getElementById("deleteTextbox");
+			const deleteResult = document.getElementById("deleteResult");
+			
+			// Upload
+			uploadButton.addEventListener("change", event => {
+				
+				// 清除
+				uploadResult.textContent = "";
+
+				// File
+				const file = event.target.files[0];
+				const path = file.name;
+
+				// StorageReference
+				const storageReference = firebase.storage().ref(path);
+
+				// Put
+				storageReference.put(file).on(				
+					"state_changed",
+					function progress(snapshot) {
+					  let uploadValue = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+					  uploadProgress.value = uploadValue;
+					},
+					function error(err) {
+					  uploadResult.textContent = "上傳失敗";
+					  uploadButton.value = "";
+					  downloadTextbox.value = path;
+					  deleteTextbox.value = path;
+					},
+					function complete() {
+					  uploadResult.textContent = "上傳成功";
+					  uploadButton.value = "";
+					  downloadTextbox.value = path;
+					  deleteTextbox.value = path;
+					}
+				);
+			});
+			
+			// Download
+			downloadButton.addEventListener("click", event => {
+			
+			    // StorageReference
+			    const storageReference = firebase.storage().ref(downloadTextbox.value);
+
+				// Download
+				storageReference.getDownloadURL().then(function (url) {
+					downloadResult.src = url;
+				}).catch(function (error) {
+					downloadResult.src = "";
+				});
+			});		
+			
+			// Delete
+			deleteButton.addEventListener("click", event => {
+			
+			    // StorageReference
+			    const storageReference = firebase.storage().ref(deleteTextbox.value);
+
+				// Delete
+				storageReference.delete().then( () => {
+					deleteResult.textContent = "刪除成功";
+				}).catch(function (error) {
+					deleteResult.textContent = "刪除失敗";
+				});
+			});	
+		};
+	</script>	
+</head>
+<body>
+
+    <!--Title-->
+    <h2>StorageLab</h2>
+    <hr />
+
+    <!--Upload-->	
+	<input type="file" text="Upload" id="uploadButton"></br>
+	<progress value="0" max="100" id="uploadProgress">0%</progress></br>
+	<div id="uploadResult"></div>
+	<hr />
+	<br />
+	
+	<!--Download-->	
+	<input type="button" value="Download" id="downloadButton"></br>
+	<input type="text" id="downloadTextbox"></br>
+	<img id="downloadResult"></img>
+	<hr />
+	<br />
+	
+	<!--Delete-->	
+	<input type="button" value="Delete" id="deleteButton"></br>
+	<input type="text" id="deleteTextbox"></br>
+	<div id="deleteResult"></div>
+	<hr />
+	<br />
+
+	<!--Firebase-->
+	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
+	<script>
+
+	  // Config Firebase
+	  var firebaseConfig = {
+		apiKey: "AIzaSyDOlBailkmP_sxQdfheqqAhbNVJjyRMbvw",
+		authDomain: "clk-firebaselab-web.firebaseapp.com",
+		projectId: "clk-firebaselab-web",
+		storageBucket: "clk-firebaselab-web.appspot.com",
+		messagingSenderId: "483239226594",
+		appId: "1:483239226594:web:f621b42a4991b6b70d42bb"
+	  };
+	  
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
+	  
+	</script>
+	
+</body>
+</html>
