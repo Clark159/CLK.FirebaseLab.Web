@@ -5,30 +5,18 @@
     <meta charset="utf-8" />
     <title></title>
 	<script language="javascript">
-		window.onload = function ShowHello(){
-			
-			// Elements
-			const uploadButton = document.getElementById("uploadButton");
-			const uploadProgress = document.getElementById("uploadProgress");
-			const uploadResult = document.getElementById("uploadResult");
-			
-			const downloadButton = document.getElementById("downloadButton");
-			const downloadTextbox = document.getElementById("downloadTextbox");
-			const downloadResult = document.getElementById("downloadResult");
-			
-			const deleteButton = document.getElementById("deleteButton");
-			const deleteTextbox = document.getElementById("deleteTextbox");
-			const deleteResult = document.getElementById("deleteResult");
-			
+		window.onload = function(){
+		
 			// Upload
-			uploadButton.addEventListener("change", event => {
+			document.getElementById("upload.file").addEventListener("change", event => {
 				
-				// 清除
-				uploadResult.textContent = "";
+				// Reset
+				document.getElementById("upload.result").textContent = "";	
+				document.getElementById("upload.progress").value = 0;		
 
-				// File
+				// Variables
 				const file = event.target.files[0];
-				const path = file.name;
+				const path = event.target.files[0].name;
 
 				// StorageReference
 				const storageReference = firebase.storage().ref(path);
@@ -37,54 +25,65 @@
 				storageReference.put(file).on(				
 					"state_changed",
 					function progress(snapshot) {
-					  let uploadValue = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-					  uploadProgress.value = uploadValue;
+						document.getElementById("upload.result").textContent = "Executing";
+						document.getElementById("upload.progress").value = snapshot.bytesTransferred / snapshot.totalBytes * 100;
 					},
-					function error(err) {
-					  uploadResult.textContent = "上傳失敗";
-					  uploadButton.value = "";
-					  downloadTextbox.value = path;
-					  deleteTextbox.value = path;
+					function error(error) {
+						document.getElementById("upload.result").textContent = "Error: " + error;
+						document.getElementById("upload.file").value = "";
+						document.getElementById("download.path").value = "";
+						document.getElementById("delete.path").value = "";
 					},
 					function complete() {
-					  uploadResult.textContent = "上傳成功";
-					  uploadButton.value = "";
-					  downloadTextbox.value = path;
-					  deleteTextbox.value = path;
+						document.getElementById("upload.result").textContent = "Complete";
+						document.getElementById("upload.file").value = "";
+						document.getElementById("download.path").value = path;
+						document.getElementById("delete.path").value = path;
 					}
 				);
 			});
 			
 			// Download
-			downloadButton.addEventListener("click", event => {
-			
-			    // StorageReference
-			    const storageReference = firebase.storage().ref(downloadTextbox.value);
+			document.getElementById("download.button").addEventListener("click", event => {
+				
+				// Variables
+				const path = document.getElementById("download.path").value;
+				
+				// StorageReference
+				const storageReference = firebase.storage().ref(path);
 
 				// Download
 				storageReference.getDownloadURL().then(function (url) {
-					downloadResult.src = url;
+					document.getElementById("download.result").textContent = "Complete";
+					document.getElementById("download.image").src = url;
 				}).catch(function (error) {
-					downloadResult.src = "";
+					document.getElementById("download.result").textContent = "Error: " + error;
+					document.getElementById("download.image").src = "";
 				});
-			});		
+			});	
 			
 			// Delete
-			deleteButton.addEventListener("click", event => {
+			document.getElementById("delete.button").addEventListener("click", event => {
 			
-			    // StorageReference
-			    const storageReference = firebase.storage().ref(deleteTextbox.value);
+				// Variables
+				const path = document.getElementById("delete.path").value;
+				
+				// StorageReference
+				const storageReference = firebase.storage().ref(path);
 
 				// Delete
 				storageReference.delete().then( () => {
-					deleteResult.textContent = "刪除成功";
+					document.getElementById("delete.result").textContent = "Complete";
 				}).catch(function (error) {
-					deleteResult.textContent = "刪除失敗";
+					document.getElementById("delete.result").textContent = "Error: " + error;
 				});
 			});	
-		};
+			
+		};			
 	</script>	
+	
 </head>
+
 <body>
 
     <!--Title-->
@@ -92,45 +91,32 @@
     <hr />
 
     <!--Upload-->	
-	<input type="file" text="Upload" id="uploadButton"></br>
-	<progress value="0" max="100" id="uploadProgress">0%</progress></br>
-	<div id="uploadResult"></div>
+	<input type="file" text="Upload" id="upload.file"></br>
+	<progress value="0" max="100" id="upload.progress">0%</progress></br>
+	<div id="upload.result"></div>
 	<hr />
 	<br />
 	
 	<!--Download-->	
-	<input type="button" value="Download" id="downloadButton"></br>
-	<input type="text" id="downloadTextbox"></br>
-	<img id="downloadResult"></img>
+	<input type="button" value="Download" id="download.button"></br>
+	<input type="text" id="download.path"></br>
+	<div id="download.result"></div>
+	<img id="download.image"></img>
 	<hr />
 	<br />
 	
 	<!--Delete-->	
-	<input type="button" value="Delete" id="deleteButton"></br>
-	<input type="text" id="deleteTextbox"></br>
-	<div id="deleteResult"></div>
+	<input type="button" value="Delete" id="delete.button"></br>
+	<input type="text" id="delete.path"></br>
+	<div id="delete.result"></div>
 	<hr />
 	<br />
-
-	<!--Firebase-->
-	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
-	<script>
-
-	  // Config Firebase
-	  var firebaseConfig = {
-		apiKey: "AIzaSyDOlBailkmP_sxQdfheqqAhbNVJjyRMbvw",
-		authDomain: "clk-firebaselab-web.firebaseapp.com",
-		projectId: "clk-firebaselab-web",
-		storageBucket: "clk-firebaselab-web.appspot.com",
-		messagingSenderId: "483239226594",
-		appId: "1:483239226594:web:f621b42a4991b6b70d42bb"
-	  };
-	  
-	  // Initialize Firebase
-	  firebase.initializeApp(firebaseConfig);
-	  
-	</script>
 	
 </body>
+
+<!--Firebase-->
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
+<script src="firebase-init.js"></script>
+	
 </html>

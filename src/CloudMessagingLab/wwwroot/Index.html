@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+	<script language="javascript">
+		window.onload = function(){
+			
+			// OnMessage
+			(function(){
+			
+                // Messaging
+                const messaging = firebase.messaging();
+                const messagingWorker = new BroadcastChannel("firebase-messaging-worker");
+
+				// OnMessage
+				messaging.onMessage((payload) => {	 
+                    document.getElementById("onMessage.result").textContent += "onMessage" + JSON.stringify(payload.notification) + "\r\n";	
+				});		
+
+                // OnBackgroundMessage
+                messagingWorker.onmessage = (event) => {
+                    const payload = event.data;
+                    document.getElementById("onMessage.result").textContent += "onBackgroundMessage" + JSON.stringify(payload.notification) + "\r\n";
+				};
+
+			}());
+			
+			// GetToken
+			document.getElementById("getToken.button").addEventListener("click", event => {
+				
+				// Variables
+				const vapidKey = "BF5laQ9Gnc4tfbYPuad9EoUkQEM5hjTMNIMaBRL6Djk2cnNCvyH0OhB1MODzV_f2o-ISjJhymL9xAlFlANv6t9k";
+				
+				// Messaging
+				const messaging = firebase.messaging();
+
+				// GetToken
+				Notification.requestPermission().then((permission) => {
+					if (permission != "granted") {
+						throw "Request permission to notify.";
+					}
+				}).then(() => {					
+					return messaging.getToken({vapidKey: vapidKey}).then((registrationToken) => {
+						if (registrationToken) {
+							document.getElementById("getToken.result").textContent = registrationToken;
+						} else {							
+							throw "No registration token available.";
+						}
+					})				
+				}).catch((error) => {
+					document.getElementById("getToken.result").textContent = "Error: " + error;
+				});
+			});
+
+			// DeleteToken
+			document.getElementById("deleteToken.button").addEventListener("click", event => {
+				
+				// Variables
+				const registrationToken = document.getElementById("getToken.result").textContent;
+				
+				// Messaging
+				const messaging = firebase.messaging();
+
+				// DeleteToken
+				messaging.deleteToken(registrationToken).then(() => {
+                    document.getElementById("deleteToken.result").textContent = "Complete";
+                    document.getElementById("getToken.result").textContent = "";
+				}).catch((error) => {
+					document.getElementById("deleteToken.result").textContent = "Error: " + error;
+				});
+			});	
+						
+		};			
+	</script>	
+	
+</head>
+
+<body>
+
+	<!--Title-->
+	<h2>CloudMessagingLab</h2>
+	<hr />
+
+	<!--GetToken-->
+	<input type="button" value="GetToken" id="getToken.button"></br>
+	<div id="getToken.result"></div>
+	<hr />
+	<br />
+
+	<!--DeleteToken-->
+	<input type="button" value="DeleteToken" id="deleteToken.button"></br>
+	<div id="deleteToken.result"></div>
+	<hr />
+	<br />
+
+	<!--OnMessage-->
+	<h3>OnMessage</h3>
+	<div id="onMessage.result" style="white-space: pre;"></div>
+	<hr />
+	<br />
+
+
+	<!--Firebase-->
+	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-messaging.js"></script>
+	<script src="firebase-init.js"></script>
+
+</body>
+</html>
