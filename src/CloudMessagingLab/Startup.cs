@@ -1,3 +1,5 @@
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -5,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,8 +24,21 @@ namespace CloudMessagingLab
 
             #endregion
 
+            // EntryDirectory
+            var entryDirectory = AppContext.BaseDirectory;
+            if (Directory.Exists(entryDirectory) == false) throw new InvalidOperationException($"{nameof(entryDirectory)}=null");
+
             // Mvc
             services.AddMvc();
+
+            // FirebaseAdmin
+            services.AddSingleton<FirebaseApp>(
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromFile(Path.Combine(entryDirectory, @"firebase-admin.json"))
+                })
+            );
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,7 +49,7 @@ namespace CloudMessagingLab
             if (env == null) throw new ArgumentException(nameof(env));
 
             #endregion
-
+                        
             // Development
             if (env.IsDevelopment() == true)
             {
