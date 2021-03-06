@@ -1,4 +1,5 @@
 using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CloudMessagingLab
+namespace MessagingLab
 {
     public class Startup
     {
@@ -38,7 +39,7 @@ namespace CloudMessagingLab
                     Credential = GoogleCredential.FromFile(Path.Combine(entryDirectory, @"firebase-admin.json"))
                 })
             );
-
+            services.AddSingleton<FirebaseMessaging>(FirebaseMessaging.DefaultInstance);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

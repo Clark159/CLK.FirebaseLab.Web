@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:54021",
-      "sslPort": 44368
+      "applicationUrl": "http://localhost:61719",
+      "sslPort": 44337
     }
   },
   "profiles": {
@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "CloudMessagingLab": {
+    "MessagingLab": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

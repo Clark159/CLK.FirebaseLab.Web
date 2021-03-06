@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudMessagingLab", "CloudMessagingLab.csproj", "{76D8C83D-1379-4AD2-840B-C3A63641614E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingLab", "MessagingLab.csproj", "{6FBF8B09-2CCD-4AA4-BD00-E207462FDA43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{76D8C83D-1379-4AD2-840B-C3A63641614E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76D8C83D-1379-4AD2-840B-C3A63641614E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76D8C83D-1379-4AD2-840B-C3A63641614E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76D8C83D-1379-4AD2-840B-C3A63641614E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FBF8B09-2CCD-4AA4-BD00-E207462FDA43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FBF8B09-2CCD-4AA4-BD00-E207462FDA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FBF8B09-2CCD-4AA4-BD00-E207462FDA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FBF8B09-2CCD-4AA4-BD00-E207462FDA43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C0AB3AFE-58C3-44DD-AA6C-0BD82F19A965}
+		SolutionGuid = {4D8445E7-E4DA-4D6B-BA72-BF0CA808752A}
 	EndGlobalSection
 EndGlobal
