@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+	<script language="javascript">
+		window.onload = function(){
+		
+			// Upload
+			document.getElementById("upload.file").addEventListener("change", event => {
+				
+				// Reset
+				document.getElementById("upload.result").textContent = "";	
+				document.getElementById("upload.progress").value = 0;		
+
+				// Variables
+				const file = event.target.files[0];
+				const path = event.target.files[0].name;
+
+				// StorageReference
+				const storageReference = firebase.storage().ref(path);
+
+				// Put
+				storageReference.put(file).on(				
+					"state_changed",
+					function progress(snapshot) {
+						document.getElementById("upload.result").textContent = "Executing";
+						document.getElementById("upload.progress").value = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+					},
+					function error(error) {
+						document.getElementById("upload.result").textContent = "Error: " + error;
+						document.getElementById("upload.file").value = "";
+						document.getElementById("download.path").value = "";
+						document.getElementById("delete.path").value = "";
+					},
+					function complete() {
+						document.getElementById("upload.result").textContent = "Complete";
+						document.getElementById("upload.file").value = "";
+						document.getElementById("download.path").value = path;
+						document.getElementById("delete.path").value = path;
+					}
+				);
+			});
+			
+			// Download
+			document.getElementById("download.button").addEventListener("click", event => {
+				
+				// Variables
+				const path = document.getElementById("download.path").value;
+				
+				// StorageReference
+				const storageReference = firebase.storage().ref(path);
+
+				// Download
+				storageReference.getDownloadURL().then(function (url) {
+					document.getElementById("download.result").textContent = "Complete";
+					document.getElementById("download.image").src = url;
+				}).catch(function (error) {
+					document.getElementById("download.result").textContent = "Error: " + error;
+					document.getElementById("download.image").src = "";
+				});
+			});	
+			
+			// Delete
+			document.getElementById("delete.button").addEventListener("click", event => {
+			
+				// Variables
+				const path = document.getElementById("delete.path").value;
+				
+				// StorageReference
+				const storageReference = firebase.storage().ref(path);
+
+				// Delete
+				storageReference.delete().then( () => {
+					document.getElementById("delete.result").textContent = "Complete";
+				}).catch(function (error) {
+					document.getElementById("delete.result").textContent = "Error: " + error;
+				});
+			});	
+			
+		};			
+	</script>	
+	
+</head>
+
+<body>
+
+    <!--Title-->
+    <h2>StorageLab</h2>
+    <hr />
+
+    <!--Upload-->	
+	<input type="file" text="Upload" id="upload.file" /><br />
+	<progress value="0" max="100" id="upload.progress">0%</progress><br />
+	<div id="upload.result"></div><br />
+	<hr />
+	
+	<!--Download-->	
+	<input type="button" value="Download" id="download.button" /><br />
+	<input type="text" id="download.path" /><br />
+	<div id="download.result"></div><br />
+	<img id="download.image"></img>
+	<hr />
+	
+	<!--Delete-->	
+	<input type="button" value="Delete" id="delete.button" /><br />
+	<input type="text" id="delete.path" /><br />
+	<div id="delete.result"></div><br />
+	<hr />
+	
+</body>
+
+<!--Firebase-->
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
+<script src="firebase-init.js"></script>
+	
+</html>

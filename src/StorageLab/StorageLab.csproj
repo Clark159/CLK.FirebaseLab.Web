@@ -8,8 +8,4 @@
     <Exec Command="start xcopy &quot;$(SolutionDir)TemplateLab\wwwroot\*&quot; &quot;$(ProjectDir)wwwroot&quot; /r /s /i /y" />
   </Target>
 
-  <ItemGroup>
-    <PackageReference Include="FirebaseAdmin" Version="2.0.0" />
-  </ItemGroup>
-
 </Project>

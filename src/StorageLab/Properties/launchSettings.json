@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:50793",
-      "sslPort": 44373
+      "applicationUrl": "http://localhost:50763",
+      "sslPort": 44330
     }
   },
   "profiles": {
@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "MessagingLab": {
+    "StorageLab": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
